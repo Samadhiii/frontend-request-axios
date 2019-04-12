@@ -6,7 +6,7 @@ const store = {
   token: 'user_token',
 };
 
-const serviceUrl = `http://${href.split('/')[2]}`;
+const serviceUrl = `http://${href.split('/')[2]}`; // 服务地址
 
 const XHR = axios.create({
   baseURl: '',
@@ -27,14 +27,20 @@ XHR.interceptors.request.use((request) => {
   }
   return request;
 }, (error) => {
-  openNotification('error', error.code);
+  // 提示报错，终止promise
+  alert(error.message);
   Promise.reject(error);
 });
+
+// api: {
+//   url: '',  api url
+//   methos: '',  request method
+// }
 
 export function CommonRequest(data, api, solve) {
   if (api.method === 'get') {
     return new Promise((resolve, reject) => {
-      axios.get(serviceUrl + api.url, {
+      axios.get(`${serviceUrl}${api.url}`, {
         params: data,
       }).then((response) => {
         if (response.data.code === 200) {
@@ -42,21 +48,17 @@ export function CommonRequest(data, api, solve) {
         } else if (solve) {
           resolve(response.data);
         } else {
-          if (response.data.message) {
-            openNotification('error', null, response.data.message);
-          } else {
-            openNotification('error', null, response.data.status);
-          }
-          reject();
+          alert(response.data.message);
+          reject(response.data.message);
         }
       }).catch((error) => {
-        openNotification('error', error.code, null, api.desc);
+        alert(error.message);
       });
     });
   }
   return new Promise((resolve, reject) => {
     XHR({
-      url: serviceUrl + api.url,
+      url: `${serviceUrl}${api.url}`,
       method: api.method,
       data,
     }).then((response) => {
@@ -65,67 +67,12 @@ export function CommonRequest(data, api, solve) {
       } else if (solve) {
         resolve(response.data);
       } else {
-        if (response.data.message) {
-          openNotification('error', null, response.data.message);
-        } else {
-          openNotification('error', null, response.data.status);
-        }
-        reject();
+        alert(response.data.message);
+        reject(response.data.message);
       }
     }).catch((error) => {
-      openNotification('error', error.code, null, api.desc);
+      alert(error.message);
     });
   });
 }
 
-export function postData(data, api, solve) {
-  return new Promise((resolve, reject) => {
-    XHR({
-      url: serviceUrl + api.url,
-      method: 'post',
-      data,
-    }).then((response) => {
-      if (response.data.code === 200) {
-        resolve(response.data);
-      } else if (solve) {
-        resolve(response.data);
-      } else {
-        if (response.data.message) {
-          openNotification('error', null, response.data.message, api.desc);
-        } else {
-          openNotification('error', response.data.code, null, api.desc);
-        }
-        reject();
-      }
-    }).catch((error) => {
-      openNotification('error', error.code, null, api.desc);
-    });
-  });
-}
-
-export function statisticsPostData(data, api, solve) {
-  return new Promise((resolve, reject) => {
-    XHR({
-      url: serviceUrl + api.url,
-      method: 'post',
-      data,
-    }).then((response) => {
-      if (response.data.status === 'success') {
-        resolve(response.data);
-      } else if (solve) {
-        resolve(response.data);
-      } else {
-        if (response.data.message) {
-          openNotification('error', null, response.data.message);
-        } else if (response.data.status) {
-          openNotification('error', null, response.data.status);
-        } else {
-          openNotification('error', null, response.data.code);
-        }
-        reject();
-      }
-    }).catch((error) => {
-      openNotification('error', error.code, null, api.desc);
-    });
-  });
-}
