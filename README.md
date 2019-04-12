@@ -19,28 +19,27 @@ solve|无|否|若没有slove参数，请求函数自动拦截请求错误，并�
 
 
 ##### 使用示例
-(```)
+
+
     commonRequest({test: 'test'},{url: '/test', method: 'post'})
-      .then((response) => {
-      console.log(response);
+        .then((response) => {
+        console.log(response);
     });
-(```)
 
-
-(```)
     commonRequest(
-      {test: 'test'},
-      {url: '/test', method: 'post'}, 
-      'slove')
-      .then((response) => {
-        if(response.code === 200){
-          request success  balabala....
-        } else {
-          requesr falied    balabala...
-        }
+        {test: 'test'},
+        {url: '/test', method: 'post'}, 
+        'slove')
+        .then((response) => {
+            if(response.code === 200){
+              request success  balabala....
+            } else {
+              requesr falied    balabala...
+            }
     })
-(```)
 
+
+- axios中文文档
 [axios](https://www.kancloud.cn/yunye/axios/234845)
 
   
