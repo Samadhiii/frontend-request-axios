@@ -1,12 +1,11 @@
 import axios from 'axios';
-import openNotification from './noticeFilter';
 
 const { href } = window.location;
 const store = {
   token: 'user_token',
 };
 
-const serviceUrl = `http://${href.split('/')[2]}`; // 服务地址
+const serviceUrl = `http://${href.split('/')[2]}`; // service addr
 
 const XHR = axios.create({
   baseURl: '',
